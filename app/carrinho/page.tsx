@@ -62,8 +62,8 @@ export default function PaginaCarrinho() {
   if (itens.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-32 text-center bg-[#f5f4f0]">
-        <ShoppingBag className="mx-auto h-12 w-12 text-zinc-300" />
-        <h1 className="mt-6 text-2xl font-black italic uppercase">
+        <ShoppingBag className="mx-auto h-12 w-12 text-[#0b0b0b]" />
+        <h1 className="text-[#0b0b0b] mt-6 text-2xl font-black italic uppercase">
           Seu carrinho está vazio
         </h1>
         <p className="mt-2 text-sm text-zinc-500">
@@ -72,7 +72,7 @@ export default function PaginaCarrinho() {
         <div className="mt-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-[#2D3A44] px-6 py-3 text-xs tracking-widest text-white"
+            className="rounded-sm inline-flex items-center gap-2 bg-[#2D3A44] px-6 py-3 text-xs tracking-widest text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar para a vitrine
