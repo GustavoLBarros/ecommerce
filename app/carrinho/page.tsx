@@ -21,7 +21,6 @@ export default function PaginaCarrinho() {
   const { itens, removerDoCarrinho, atualizarQuantidade } = useCarrinho();
   const [itemConfirmando, setItemConfirmando] = useState<ItemParaRemover | null>(null);
 
-  // Estados do Frete
   const [cep, setCep] = useState("");
   const [carregandoFrete, setCarregandoFrete] = useState(false);
   const [opcoesFrete, setOpcoesFrete] = useState<OpcaoFrete[] | null>(null);
@@ -29,55 +28,12 @@ export default function PaginaCarrinho() {
 
   const valorTotalItens = itens.reduce((acc, item) => acc + item.produto.preco * item.quantidade, 0);
   
-  // Regra de Frete Grátis
   const limiteFreteGratis = 300;
   const elegivelFreteGratis = valorTotalItens >= limiteFreteGratis;
   const quantoFaltaFreteGratis = limiteFreteGratis - valorTotalItens;
   const porcentagemProgresso = Math.min((valorTotalItens / limiteFreteGratis) * 100, 100);
 
   const valorTotalPedido = valorTotalItens + (freteSelecionado ? freteSelecionado.valor : 0);
-
-  const atualizarValoresFrete = (subtotalAtual: number) => {
-    if (!opcoesFrete) return;
-
-    const atingeGratis = subtotalAtual >= limiteFreteGratis;
-    const pacValor = atingeGratis ? 0 : 22.90;
-    const sedexValor = atingeGratis ? 15.00 : 38.50;
-
-    const resultado: OpcaoFrete[] = [
-      { tipo: "PAC", valor: pacValor, prazo: "5-8 dias úteis" },
-      { tipo: "SEDEX", valor: sedexValor, prazo: "1-3 dias úteis" }
-    ];
-
-    setOpcoesFrete(resultado);
-    
-    if (freteSelecionado) {
-      const novaOpcaoAtiva = resultado.find(o => o.tipo === freteSelecionado.tipo);
-      if (novaOpcaoAtiva) setFreteSelecionado(novaOpcaoAtiva);
-    }
-  };
-
-  useEffect(() => {
-    if (opcoesFrete) {
-      atualizarValoresFrete(valorTotalItens);
-    }
-  }, [valorTotalItens]);
-
-  const confirmarRemocao = () => {
-    if (itemConfirmando) {
-      removerDoCarrinho(itemConfirmando.id, itemConfirmando.opcao);
-      setItemConfirmando(null);
-    }
-  };
-
-  const lidarComMudancaCep = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let valor = e.target.value.replace(/\D/g, "");
-    if (valor.length > 8) valor = valor.slice(0, 8);
-    if (valor.length > 5) {
-      valor = `${valor.slice(0, 5)}-${valor.slice(5)}`;
-    }
-    setCep(valor);
-  };
 
   const calcularFrete = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,37 +46,33 @@ export default function PaginaCarrinho() {
     setTimeout(() => {
       const pacValor = elegivelFreteGratis ? 0 : 22.90;
       const sedexValor = elegivelFreteGratis ? 15.00 : 38.50;
-
       const resultado: OpcaoFrete[] = [
         { tipo: "PAC", valor: pacValor, prazo: "5-8 dias úteis" },
         { tipo: "SEDEX", valor: sedexValor, prazo: "1-3 dias úteis" }
       ];
-
       setOpcoesFrete(resultado);
       setFreteSelecionado(resultado[0]);
       setCarregandoFrete(false);
     }, 500);
   };
 
+  const lidarComMudancaCep = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let valor = e.target.value.replace(/\D/g, "");
+    if (valor.length > 8) valor = valor.slice(0, 8);
+    if (valor.length > 5) valor = `${valor.slice(0, 5)}-${valor.slice(5)}`;
+    setCep(valor);
+  };
+
   const menorPrecoFrete = opcoesFrete ? Math.min(...opcoesFrete.map(o => o.valor)) : 0;
 
   if (itens.length === 0) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8 text-center">
-        <ShoppingBag className="mx-auto h-12 w-12 text-zinc-300 stroke-[1.5]" />
-        <h1 className="mt-6 text-2xl font-black italic tracking-tighter text-zinc-900 uppercase">
-          Seu carrinho está vazio
-        </h1>
-        <p className="mt-2 text-sm text-zinc-500">
-          Você não adicionou nenhum equipamento ou vestuário ainda.
-        </p>
+      <div className="mx-auto max-w-7xl px-4 py-20 text-center">
+        <ShoppingBag className="mx-auto h-12 w-12 text-zinc-300" />
+        <h1 className="mt-6 text-2xl font-black italic tracking-tighter text-zinc-900 uppercase">Seu carrinho está vazio</h1>
         <div className="mt-8">
-          <Link
-            href="/"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-sm bg-[#2D3A44] px-6 py-3 text-xs font-medium tracking-widest text-white hover:bg-[#2D3A44]/95 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar para a vitrine
+          <Link href="/" className="inline-flex items-center gap-2 bg-[#2D3A44] px-6 py-3 text-white hover:bg-opacity-90">
+            <ArrowLeft className="h-4 w-4" /> Voltar para a vitrine
           </Link>
         </div>
       </div>
@@ -128,73 +80,35 @@ export default function PaginaCarrinho() {
   }
 
   return (
-    /* overflow-hidden adicionado aqui remove qualquer chance do layout vazar para a tela inteira */
-    <div className="mx-auto max-w-7xl w-full px-4 pt-6 pb-4 sm:px-6 lg:px-8 h-[calc(100vh-90px)] flex flex-col justify-start overflow-hidden">
-      <h1 className="text-3xl font-black italic tracking-tighter text-zinc-900 uppercase border-b border-zinc-200 pb-3 flex-shrink-0">
+    <div className="mx-auto max-w-7xl w-full px-4 py-8">
+      <h1 className="text-2xl sm:text-3xl font-black italic tracking-tighter text-zinc-900 uppercase border-b border-zinc-200 pb-4">
         Seu Carrinho
       </h1>
 
-      {/* Grid principal travado na altura máxima restante */}
-      <div className="mt-4 lg:grid lg:grid-cols-12 lg:gap-x-12 xl:gap-x-16 flex-1 min-h-0 items-start overflow-hidden">
-        
-        {/* COLUNA DA ESQUERDA: Unica com permissão de scroll interno */}
-        <div className="lg:col-span-7 h-full overflow-y-auto pr-2 scrollbar-thin">
-          <ul className="divide-y divide-zinc-200 border-b border-zinc-200">
+      <div className="mt-6 lg:grid lg:grid-cols-12 lg:gap-12">
+        {/* Lista de Produtos */}
+        <div className="lg:col-span-7">
+          <ul className="divide-y divide-zinc-200">
             {itens.map((item) => (
-              <li key={`${item.produto.id}-${item.opcaoSelecionada}`} className="flex py-5">
-                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-sm bg-zinc-100 sm:h-32 sm:w-32">
-                  <img
-                    src={`/${item.produto.imagem}`}
-                    alt={item.produto.nome}
-                    className="h-full w-full object-cover object-center"
-                  />
+              <li key={`${item.produto.id}-${item.opcaoSelecionada}`} className="flex py-6">
+                <div className="h-24 w-24 sm:h-32 sm:w-32 bg-zinc-100 rounded-sm overflow-hidden">
+                  <img src={`/${item.produto.imagem}`} alt={item.produto.nome} className="h-full w-full object-cover" />
                 </div>
-
-                <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                  <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                    <div>
-                      <h3 className="text-sm font-bold uppercase text-zinc-900">
-                        <Link href={`/produto/${item.produto.slug}`} className="hover:opacity-80">
-                          {item.produto.nome}
-                        </Link>
-                      </h3>
-                      
-                      {item.opcaoSelecionada && (
-                        <p className="mt-1 text-xs font-bold text-[#C88A36] uppercase tracking-wider">
-                          Tam: {item.opcaoSelecionada}
-                        </p>
-                      )}
-
-                      <p className="mt-2 text-sm font-black text-zinc-950">
-                        {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.produto.preco)}
-                      </p>
+                <div className="ml-4 flex flex-1 flex-col justify-between">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase">{item.produto.nome}</h3>
+                    {item.opcaoSelecionada && <p className="text-xs text-[#C88A36] font-bold">Tam: {item.opcaoSelecionada}</p>}
+                    <p className="text-sm font-black">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.produto.preco)}</p>
+                  </div>
+                  <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center border border-zinc-300 rounded-sm">
+                      <button onClick={() => atualizarQuantidade(item.produto.id, item.opcaoSelecionada, item.quantidade - 1)} className="px-3 py-1 font-bold">-</button>
+                      <span className="px-3 text-sm">{item.quantidade}</span>
+                      <button onClick={() => atualizarQuantidade(item.produto.id, item.opcaoSelecionada, item.quantidade + 1)} className="px-3 py-1 font-bold">+</button>
                     </div>
-
-                    <div className="mt-4 sm:mt-0 sm:pr-9 flex items-center justify-between sm:justify-end gap-4">
-                      <div className="flex items-center border border-zinc-200 rounded-sm bg-white">
-                        <button
-                          onClick={() => atualizarQuantidade(item.produto.id, item.opcaoSelecionada, item.quantidade - 1)}
-                          className="cursor-pointer px-3 py-1 text-zinc-600 hover:bg-zinc-100 font-bold"
-                        >
-                          -
-                        </button>
-                        <span className="px-3 py-1 text-xs font-bold text-zinc-900">{item.quantidade}</span>
-                        <button
-                          onClick={() => atualizarQuantidade(item.produto.id, item.opcaoSelecionada, item.quantidade + 1)}
-                          className="cursor-pointer px-3 py-1 text-zinc-600 hover:bg-zinc-100 font-bold"
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <button
-                        onClick={() => setItemConfirmando({ id: item.produto.id, opcao: item.opcaoSelecionada, nome: item.produto.nome })}
-                        className="cursor-pointer text-zinc-400 hover:text-[#9E4733] transition-colors"
-                        aria-label="Remover item"
-                      >
-                        <Trash2 className="h-5 w-5 stroke-[1.5]" />
-                      </button>
-                    </div>
+                    <button onClick={() => setItemConfirmando({ id: item.produto.id, opcao: item.opcaoSelecionada, nome: item.produto.nome })} className="text-zinc-400 hover:text-red-700">
+                      <Trash2 className="h-5 w-5" />
+                    </button>
                   </div>
                 </div>
               </li>
@@ -202,134 +116,62 @@ export default function PaginaCarrinho() {
           </ul>
         </div>
 
-        {/* COLUNA DA DIREITA: Fixada sem margens excessivas */}
-        <div className="mt-6 lg:mt-0 lg:col-span-5 rounded-sm bg-zinc-50 px-4 py-5 sm:p-6 lg:p-7 w-full flex-shrink-0">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-zinc-900">
-            Resumo do Pedido
-          </h2>
-
-          <div className="mt-5 space-y-3.5">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-zinc-600">Subtotal</p>
-              <p className="text-sm font-bold text-zinc-950">
-                {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valorTotalItens)}
-              </p>
-            </div>
-
-            <div className="border-t border-zinc-200 pt-3.5 space-y-3">
-              <div className="space-y-1.5 bg-white/40 border border-zinc-200/50 p-2.5 rounded-sm">
-                {elegivelFreteGratis ? (
-                  <p className="text-[10px] text-center font-bold uppercase tracking-wider text-[#4B5340]">
-                    Frete Grátis Liberado para você
-                  </p>
-                ) : (
-                  <>
-                    <p className="text-[10px] text-zinc-500 font-medium tracking-tight">
-                      Falta só <span className="font-bold text-zinc-900">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(quantoFaltaFreteGratis)}</span> para ganhar <span className="font-bold text-[#4B5340] underline">Frete Grátis</span>
-                    </p>
-                    <div className="h-1 w-full bg-zinc-200 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-[#4B5340] transition-all duration-300" 
-                        style={{ width: `${porcentagemProgresso}%` }}
-                      />
-                    </div>
-                  </>
-                )}
+        {/* Resumo e Checkout - Sticky no Desktop */}
+        <div className="mt-8 lg:mt-0 lg:col-span-5">
+          <div className="lg:sticky lg:top-8 bg-zinc-50 p-6 rounded-sm border border-zinc-100">
+            <h2 className="text-xs font-bold uppercase tracking-widest">Resumo do Pedido</h2>
+            
+            <div className="mt-6 space-y-4">
+              <div className="flex justify-between text-sm">
+                <span>Subtotal</span>
+                <span className="font-bold">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valorTotalItens)}</span>
               </div>
 
+              {!elegivelFreteGratis && (
+                <div className="bg-white p-3 border border-zinc-200 rounded-sm">
+                  <p className="text-[10px] text-zinc-500 mb-2">Faltam {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(quantoFaltaFreteGratis)} para Frete Grátis</p>
+                  <div className="h-1.5 w-full bg-zinc-100 rounded-full"><div className="h-full bg-[#4B5340]" style={{ width: `${porcentagemProgresso}%` }} /></div>
+                </div>
+              )}
+
               <form onSubmit={calcularFrete} className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="00000-000"
-                  value={cep}
-                  onChange={lidarComMudancaCep}
-                  className="w-full rounded-sm border border-zinc-200 bg-white px-3 py-1.5 text-xs placeholder-zinc-400 focus:border-zinc-400 focus:outline-none"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={carregandoFrete || cep.replace(/\D/g, "").length !== 8}
-                  className="cursor-pointer rounded-sm border border-[#2D3A44] bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2D3A44] hover:bg-zinc-50 disabled:opacity-50 transition-colors whitespace-nowrap"
-                >
-                  {carregandoFrete ? "..." : "Calcular"}
-                </button>
+                <input type="text" placeholder="CEP" value={cep} onChange={lidarComMudancaCep} className="w-full border p-2 text-sm rounded-sm" />
+                <button type="submit" disabled={carregandoFrete} className="bg-[#2D3A44] text-white px-4 text-xs font-bold uppercase">Calcular</button>
               </form>
 
               {opcoesFrete && (
-                <div className="space-y-1.5 pt-0.5 animate-in fade-in duration-150">
-                  {opcoesFrete.map((opcao) => {
-                    const ehOMenorPreco = opcao.valor === menorPrecoFrete;
-                    return (
-                      <label
-                        key={opcao.tipo}
-                        className={`flex cursor-pointer items-center justify-between rounded-sm border p-2 text-[11px] transition-all duration-200 ${
-                          freteSelecionado?.tipo === opcao.tipo
-                            ? "border-zinc-400 bg-white shadow-xs"
-                            : "border-zinc-200/60 bg-white/50 hover:bg-white"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="radio"
-                            name="resumo-frete"
-                            checked={freteSelecionado?.tipo === opcao.tipo}
-                            onChange={() => setFreteSelecionado(opcao)}
-                            className="accent-zinc-900"
-                          />
-                          <div>
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-bold text-zinc-900">{opcao.tipo}</span>
-                              {ehOMenorPreco && (
-                                <span className="text-[9px] px-1 font-black tracking-wider text-white uppercase bg-[#4B5340] scale-[0.9] origin-left">
-                                  {opcao.valor === 0 ? "Elegível" : "Melhor Custo"}
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-zinc-400">({opcao.prazo})</span>
-                          </div>
-                        </div>
-                        <span className="font-black text-zinc-950">
-                          {opcao.valor === 0 ? "Grátis" : new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(opcao.valor)}
-                        </span>
-                      </label>
-                    );
-                  })}
+                <div className="space-y-2">
+                  {opcoesFrete.map((opcao) => (
+                    <label key={opcao.tipo} className="flex justify-between p-3 border rounded-sm cursor-pointer hover:border-zinc-400">
+                      <div className="flex items-center gap-2">
+                        <input type="radio" name="frete" checked={freteSelecionado?.tipo === opcao.tipo} onChange={() => setFreteSelecionado(opcao)} />
+                        <span className="text-xs font-bold">{opcao.tipo} ({opcao.prazo})</span>
+                      </div>
+                      <span className="text-xs font-bold">{opcao.valor === 0 ? "Grátis" : new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(opcao.valor)}</span>
+                    </label>
+                  ))}
                 </div>
               )}
+
+              <div className="flex justify-between pt-4 border-t border-zinc-200">
+                <span className="font-bold uppercase">Total</span>
+                <span className="text-xl font-black">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valorTotalPedido)}</span>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-zinc-200 pt-3.5">
-              <p className="text-base font-bold text-zinc-900 uppercase tracking-tight">Total</p>
-              <p className="text-xl font-black text-zinc-950">
-                {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valorTotalPedido)}
-              </p>
-            </div>
-          </div>
-
-          <button
-            className="cursor-pointer mt-6 flex w-full items-center justify-center rounded-sm bg-[#2D3A44] px-8 py-3.5 text-xs font-medium tracking-widest text-white hover:bg-[#2D3A44]/95 transition-colors"
-          >
-            Fechar Pedido
-          </button>
-
-          <div className="mt-3.5 text-center">
-            <Link
-              href="/"
-              className="inline-flex cursor-pointer items-center gap-1 text-xs font-medium tracking-wider text-zinc-500 hover:text-zinc-800 transition-colors"
-            >
-              Continuar Comprando
-            </Link>
+            <button className="w-full mt-6 bg-[#2D3A44] text-white py-4 font-bold uppercase tracking-widest text-xs hover:bg-black transition-colors">
+              Fechar Pedido
+            </button>
           </div>
         </div>
-
       </div>
 
       <ModalConfirmacao
-        isOpen={itemConfirmando !== null}
+        isOpen={!!itemConfirmando}
         onClose={() => setItemConfirmando(null)}
-        onConfirm={confirmarRemocao}
+        onConfirm={() => { if(itemConfirmando) { removerDoCarrinho(itemConfirmando.id, itemConfirmando.opcao); setItemConfirmando(null); } }}
         titulo="Confirmar Remoção"
-        mensagem={`Tem certeza que deseja remover "${itemConfirmando?.nome}" do seu carrinho?`}
+        mensagem={`Remover ${itemConfirmando?.nome}?`}
       />
     </div>
   );
