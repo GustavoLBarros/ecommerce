@@ -29,9 +29,9 @@ export function Navbar() {
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <Link href="/" aria-label="LIKEWORK">
             <img
-              src="/logo.svg"
+              src="/logo.png"
               alt="LIKEWORK"
-              className="h-6 sm:h-7 w-auto"
+              className="h-6 sm:h-10 w-auto"
             />
           </Link>
         </div>

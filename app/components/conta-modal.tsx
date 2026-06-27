@@ -20,11 +20,34 @@ function corStatus(status: StatusPedido) {
   }
 }
 
+function IconeGoogle() {
+  return (
+    <svg className="h-[18px] w-[18px]" viewBox="0 0 48 48">
+      <path
+        fill="#FFC107"
+        d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+      />
+      <path
+        fill="#FF3D00"
+        d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"
+      />
+      <path
+        fill="#4CAF50"
+        d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
+      />
+      <path
+        fill="#1976D2"
+        d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+      />
+    </svg>
+  );
+}
+
 export default function ContaModal() {
   const { aberto, fecharConta } = useContaUI();
   const { usuario, carregando, entrar, criarConta, entrarComGoogle, sair } = useUsuario();
 
-  const [modo, setModo] = useState<ModoFormulario>("entrar");
+  const [modo, setModo] = useState<ModoFormulario>("criar");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -39,11 +62,15 @@ export default function ContaModal() {
     setSenha("");
   };
 
+  const alternarModo = () => {
+    setModo((m) => (m === "entrar" ? "criar" : "entrar"));
+  };
+
   const lidarComSair = () => {
     sair();
     setEmail("");
     setNome("");
-    setModo("entrar");
+    setModo("criar");
   };
 
   return (
@@ -64,7 +91,7 @@ export default function ContaModal() {
       >
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-5 sm:px-6 flex-shrink-0">
           <h1 className="text-2xl font-black italic tracking-tighter text-zinc-900 uppercase">
-            Minha Conta
+            {usuario ? "Minha Conta" : modo === "criar" ? "Criar Conta" : "Entrar"}
           </h1>
           <button
             onClick={fecharConta}
@@ -77,26 +104,7 @@ export default function ContaModal() {
         <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 scrollbar-thin">
           {!usuario ? (
             <div className="mx-auto max-w-sm">
-              <div className="flex rounded-sm border border-zinc-200 bg-zinc-50 p-1">
-                <button
-                  onClick={() => setModo("entrar")}
-                  className={`cursor-pointer flex-1 rounded-sm py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
-                    modo === "entrar" ? "bg-[#2D3A44] text-white" : "text-zinc-500 hover:text-zinc-900"
-                  }`}
-                >
-                  Entrar
-                </button>
-                <button
-                  onClick={() => setModo("criar")}
-                  className={`cursor-pointer flex-1 rounded-sm py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
-                    modo === "criar" ? "bg-[#2D3A44] text-white" : "text-zinc-500 hover:text-zinc-900"
-                  }`}
-                >
-                  Criar Conta
-                </button>
-              </div>
-
-              <form onSubmit={lidarComSubmit} className="mt-6 space-y-4">
+              <form onSubmit={lidarComSubmit} className="space-y-4">
                 {modo === "criar" && (
                   <div>
                     <label className="text-xs font-bold uppercase tracking-widest text-zinc-400">
@@ -172,12 +180,11 @@ export default function ContaModal() {
               <button
                 onClick={() => entrarComGoogle()}
                 disabled={carregando}
-                className="cursor-pointer mt-4 flex w-full items-center justify-center gap-3 rounded-sm border border-zinc-200 bg-white px-8 py-3 text-xs font-bold uppercase tracking-wider text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 transition-colors"
+                className="cursor-pointer mt-4 flex w-full items-center justify-center gap-3 rounded-sm border border-[#dadce0] bg-white px-8 py-3 text-sm font-medium text-[#3c4043] hover:bg-[#f8f8f8] hover:shadow-sm disabled:opacity-50 transition-all"
+                style={{ fontFamily: "Roboto, Arial, sans-serif" }}
               >
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2D3A44] text-[11px] font-black text-white">
-                  G
-                </span>
-                Continuar com Google
+                <IconeGoogle />
+                Continuar com o Google
               </button>
 
               <p className="mt-6 text-center text-[11px] text-zinc-400">
@@ -188,6 +195,17 @@ export default function ContaModal() {
                   Política de Privacidade
                 </span>
                 .
+              </p>
+
+              <p className="mt-5 text-center text-xs text-zinc-500">
+                {modo === "criar" ? "Já tem uma conta? " : "Ainda não tem uma conta? "}
+                <button
+                  type="button"
+                  onClick={alternarModo}
+                  className="cursor-pointer font-bold text-zinc-900 underline hover:text-[#2D3A44] transition-colors"
+                >
+                  {modo === "criar" ? "Entrar" : "Criar conta"}
+                </button>
               </p>
             </div>
           ) : (
