@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useCarrinho } from "../context/carrinho-context";
+import { useCarrinhoUI } from "../context/carrinho-ui-context";
 import { Menu, Search, User, ShoppingBag } from "lucide-react";
 
 export function Navbar() {
   const { totalItens } = useCarrinho();
+  const { abrirCarrinho } = useCarrinhoUI();
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-100 bg-[#f5f4f0]/95">
@@ -34,21 +36,21 @@ export function Navbar() {
 
         <div className="flex items-center gap-4 sm:gap-6 text-zinc-900">
           <button aria-label="Buscar">
-            <Search className="h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
+            <Search className="cursor-pointer h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
           </button>
 
           <Link href="/conta" aria-label="Minha conta">
             <User className="h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
           </Link>
 
-          <Link href="/carrinho" className="relative" aria-label="Carrinho">
+          <button onClick={abrirCarrinho} className="relative cursor-pointer" aria-label="Carrinho">
             <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
             {totalItens > 0 && (
               <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#C88A36] text-[10px] font-bold text-white">
                 {totalItens}
               </span>
             )}
-          </Link>
+          </button>
         </div>
 
       </div>

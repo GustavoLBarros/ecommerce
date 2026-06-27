@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { CarrinhoProvider } from "./context/carrinho-context";
+import { CarrinhoUIProvider } from "./context/carrinho-ui-context";
 import { Navbar } from "./components/navbar";
-
-const inter = Inter({ subsets: ["latin"] });
+import CarrinhoModal from "./components/carrinho-modal";
 
 export const metadata: Metadata = {
-  title: "LIKEWORK | Equipamentos e Vestuário Premium",
-  description:
-    "Explore nossa linha exclusiva de vestuário e equipamentos de alta performance.",
+  title: "LIKEWORK",
+  description: "Vista o trabalho duro.",
 };
 
 export default function RootLayout({
@@ -18,22 +16,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="pt-BR"
-      className="h-full"
-      style={{
-        colorScheme: "light",
-        backgroundColor: "#ffffff",
-      }}
-    >
-      <body
-        className={`${inter.className} w-full min-h-screen bg-[#f5f4f0] text-zinc-900 antialiased`}
-      >
+    <html lang="pt-BR">
+      <body>
         <CarrinhoProvider>
-          <Navbar />
-          <main className="min-h-screen w-full bg-[#f5f4f0]">
+          <CarrinhoUIProvider>
+            <Navbar />
             {children}
-          </main>
+            <CarrinhoModal />
+          </CarrinhoUIProvider>
         </CarrinhoProvider>
       </body>
     </html>
