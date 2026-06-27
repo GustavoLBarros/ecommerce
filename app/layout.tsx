@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CarrinhoProvider } from "./context/carrinho-context";
 import { CarrinhoUIProvider } from "./context/carrinho-ui-context";
+import { UsuarioProvider } from "./context/usuario-context";
+import { ContaUIProvider } from "./context/conta-ui-context";
 import { Navbar } from "./components/navbar";
 import CarrinhoModal from "./components/carrinho-modal";
+import ContaModal from "./components/conta-modal";
 
 export const metadata: Metadata = {
   title: "LIKEWORK",
@@ -19,11 +22,16 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body>
         <CarrinhoProvider>
-          <CarrinhoUIProvider>
-            <Navbar />
-            {children}
-            <CarrinhoModal />
-          </CarrinhoUIProvider>
+          <UsuarioProvider>
+            <CarrinhoUIProvider>
+              <ContaUIProvider>
+                <Navbar />
+                {children}
+                <CarrinhoModal />
+                <ContaModal />
+              </ContaUIProvider>
+            </CarrinhoUIProvider>
+          </UsuarioProvider>
         </CarrinhoProvider>
       </body>
     </html>

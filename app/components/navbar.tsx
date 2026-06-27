@@ -2,15 +2,17 @@
 import Link from "next/link";
 import { useCarrinho } from "../context/carrinho-context";
 import { useCarrinhoUI } from "../context/carrinho-ui-context";
+import { useContaUI } from "../context/conta-ui-context";
 import { Menu, Search, User, ShoppingBag } from "lucide-react";
 
 export function Navbar() {
   const { totalItens } = useCarrinho();
   const { abrirCarrinho } = useCarrinhoUI();
+  const { abrirConta } = useContaUI();
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-100 bg-[#f5f4f0]/95">
-      <div className="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         <div className="flex items-center">
           <button
@@ -24,13 +26,13 @@ export function Navbar() {
           </button>
         </div>
 
-        <div className="flex items-center justify-center">
-          <Link
-            href="/"
-            className="text-xl sm:text-2xl font-black italic tracking-tighter text-black uppercase"
-            style={{ fontFamily: "sans-serif" }}
-          >
-            LIKEWORK
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Link href="/" aria-label="LIKEWORK">
+            <img
+              src="/logo.svg"
+              alt="LIKEWORK"
+              className="h-6 sm:h-7 w-auto"
+            />
           </Link>
         </div>
 
@@ -39,9 +41,9 @@ export function Navbar() {
             <Search className="cursor-pointer h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
           </button>
 
-          <Link href="/conta" aria-label="Minha conta">
+          <button onClick={abrirConta} className="cursor-pointer" aria-label="Minha conta">
             <User className="h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
-          </Link>
+          </button>
 
           <button onClick={abrirCarrinho} className="relative cursor-pointer" aria-label="Carrinho">
             <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
