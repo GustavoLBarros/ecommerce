@@ -8,22 +8,30 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "LIKEWORK | Equipamentos e Vestuário Premium",
-  description: "Explore nossa linha exclusiva de vestuário e equipamentos de alta performance. Conforto, estilo e durabilidade para a sua rotina.",
-  keywords: ["likework", "vestuário", "jaqueta náutica", "moda masculina", "equipamentos"],
-  authors: [{ name: "Likework Team" }],
+  description:
+    "Explore nossa linha exclusiva de vestuário e equipamentos de alta performance.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="pt-BR" className="h-full scroll-smooth">
-      <body className={`${inter.className} bg-[#f5f4f0] antialiased min-h-full flex flex-col text-zinc-900`}>
+    <html
+      lang="pt-BR"
+      className="h-full"
+      style={{
+        colorScheme: "light",
+        backgroundColor: "#ffffff",
+      }}
+    >
+      <body
+        className={`${inter.className} min-h-screen bg-[#f5f4f0] text-zinc-900 antialiased`}
+      >
         <CarrinhoProvider>
           <Navbar />
-          <main className="flex-1 w-full flex flex-col">
+          <main className="min-h-screen w-full bg-[#f5f4f0]">
             {children}
           </main>
         </CarrinhoProvider>

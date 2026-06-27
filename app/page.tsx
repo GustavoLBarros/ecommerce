@@ -18,7 +18,7 @@ export default function Home() {
 
         <div className="absolute inset-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-11 flex justify-end items-start">
           <h1
-            className="text-right text-3xl sm:text-6xl md:text-7xl font-black tracking-tighter text-white uppercase leading-[0.95] max-w-[150px] sm:max-w-xl"
+            className="text-right text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter text-white uppercase leading-[0.95] max-w-[150px] sm:max-w-xl"
             style={{ fontFamily: "sans-serif" }}
           >
             Vista o <br />
