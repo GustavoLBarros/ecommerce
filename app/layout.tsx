@@ -27,7 +27,7 @@ export default function RootLayout({
       }}
     >
       <body
-        className={`${inter.className} min-h-screen bg-[#f5f4f0] text-zinc-900 antialiased`}
+        className={`${inter.className} w-full min-h-screen bg-[#f5f4f0] text-zinc-900 antialiased`}
       >
         <CarrinhoProvider>
           <Navbar />
