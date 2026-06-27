@@ -62,7 +62,7 @@ export default function PaginaCarrinho() {
   if (itens.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-32 text-center bg-[#f5f4f0]">
-        <ShoppingBag className="mx-auto h-12 w-12 text-[#0b0b0b]" />
+        <ShoppingBag className="mx-auto h-12 w-12 text-[#0b0b0b]/80" />
         <h1 className="text-[#0b0b0b] mt-6 text-2xl font-black italic uppercase">
           Seu carrinho está vazio
         </h1>
