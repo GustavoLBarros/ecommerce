@@ -117,7 +117,7 @@ export default function PaginaCarrinho() {
         <div className="mt-8">
           <Link
             href="/"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-sm bg-[#2D3A44] px-6 py-3 text-xs font-medium tracking-widest text-white hover:bg-[#2D3A44]/95 transition-colors"
+            className="rounded-sm inline-flex cursor-pointer items-center gap-2 rounded-sm bg-[#2D3A44] px-6 py-3 text-xs font-medium tracking-widest text-white hover:bg-[#2D3A44]/95 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar para a vitrine
