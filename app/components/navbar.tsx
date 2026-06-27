@@ -7,7 +7,7 @@ import { Menu, Search, User, ShoppingBag } from "lucide-react";
 
 export function Navbar() {
   const { totalItens } = useCarrinho();
-  const { abrirCarrinho } = useCarrinhoUI();
+  const { abrirCarrinho, chaveAnimacao } = useCarrinhoUI();
   const { abrirConta } = useContaUI();
 
   return (
@@ -46,7 +46,10 @@ export function Navbar() {
           </button>
 
           <button onClick={abrirCarrinho} className="relative cursor-pointer" aria-label="Carrinho">
-            <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5]" />
+            <ShoppingBag
+              key={chaveAnimacao}
+              className={`h-5 w-5 sm:h-6 sm:w-6 stroke-[1.5] ${chaveAnimacao > 0 ? "animar-carrinho" : ""}`}
+            />
             {totalItens > 0 && (
               <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#C88A36] text-[10px] font-bold text-white">
                 {totalItens}

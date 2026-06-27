@@ -3,16 +3,19 @@ import Link from "next/link";
 import { useState } from "react";
 import { Produto } from "../types/ecom";
 import { useCarrinho } from "../context/carrinho-context";
+import { useCarrinhoUI } from "../context/carrinho-ui-context";
 import { ShoppingBag, Plus } from "lucide-react";
 
 export function CardProduto({ produto }: { produto: Produto }) {
   const { adicionarAoCarrinho } = useCarrinho();
+  const { dispararAnimacaoIcone } = useCarrinhoUI();
   const [isOverButton, setIsOverButton] = useState(false);
 
   const handleComprar = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     adicionarAoCarrinho(produto, produto.opcoes?.valores[0] || "");
+    dispararAnimacaoIcone();
   };
 
   return (
