@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="h-full scroll-smooth">
-      <body className={`${inter.className} bg-zinc-50 antialiased min-h-full flex flex-col text-zinc-900`}>
+      <body className={`${inter.className} bg-[#f5f4f0] antialiased min-h-full flex flex-col text-zinc-900`}>
         <CarrinhoProvider>
           <Navbar />
           <main className="flex-1 w-full flex flex-col">
