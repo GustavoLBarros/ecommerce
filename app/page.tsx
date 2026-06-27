@@ -18,7 +18,7 @@ export default function Home() {
 
         <div className="absolute inset-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 sm:pt-11 flex justify-end items-start">
           <h1
-            className="text-right text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter text-white uppercase leading-[0.95] max-w-[150px] sm:max-w-xl"
+            className="text-right text-3xl sm:text-6xl md:text-7xl font-black tracking-tighter text-white uppercase leading-[0.95] max-w-[150px] sm:max-w-xl"
             style={{ fontFamily: "sans-serif" }}
           >
             Vista o <br />
@@ -45,7 +45,7 @@ export default function Home() {
 
           <div className="flex items-center justify-start sm:justify-end">
             <div className="relative inline-block text-left w-full sm:w-auto">
-              <div className="flex items-center justify-between gap-1 bg-[#f5f5f5] px-4 py-2.5 rounded-sm text-sm text-zinc-600 w-full sm:w-auto">
+              <div className="flex items-center justify-between gap-1 bg-[#f5f4f0] px-4 py-2.5 rounded-sm text-sm text-zinc-600 w-full sm:w-auto">
                 <span>Ordenar por:</span>
                 <button className="cursor-pointer flex items-center tracking-wider gap-1 font-semibold text-zinc-900">
                   {ordenacao}
